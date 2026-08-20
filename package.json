@@ -1,0 +1,34 @@
+{
+  "name": "nova-ims-timetable-export",
+  "version": "1.2.0",
+  "description": "Export single or batch student group Nova IMS timetables to .ics/.zip for calendar import.",
+  "main": "extension/background.js",
+  "scripts": {
+    "validate": "node scripts/validate.js",
+    "package": "node scripts/package.js",
+    "build": "node scripts/package.js",
+    "test": "npm run validate"
+  },
+  "keywords": [
+    "chrome-extension",
+    "nova-ims",
+    "netpa",
+    "timetable",
+    "calendar",
+    "icalendar",
+    "ics",
+    "student-groups",
+    "schedule-export",
+    "manifest-v3"
+  ],
+  "author": "Malvin Tafadzwa Chitswamatombo",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/maluve05/netpa-timetable.git"
+  },
+  "bugs": {
+    "url": "https://github.com/maluve05/netpa-timetable/issues"
+  },
+  "homepage": "https://github.com/maluve05/netpa-timetable#readme"
+}

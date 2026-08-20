@@ -1,0 +1,39 @@
+name: Extension Validation & Build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  validate:
+    name: Validate Manifest & Package
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [ 18.x, 20.x, 22.x ]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Validate Extension & Check Syntax
+        run: npm run validate
+
+      - name: Build Distribution ZIP
+        run: npm run package
+
+      - name: Upload Build Artifact
+        if: matrix.node-version == '20.x'
+        uses: actions/upload-artifact@v4
+        with:
+          name: nova-ims-timetable-extension
+          path: dist/*.zip
+          if-no-files-found: error
