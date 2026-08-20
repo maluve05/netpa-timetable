@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head><title>Generate Icons</title></head>
+<body>
+<canvas id="c16" width="16" height="16"></canvas>
+<canvas id="c48" width="48" height="48"></canvas>
+<canvas id="c128" width="128" height="128"></canvas>
+<script>
+function drawIcon(canvas) {
+  const ctx = canvas.getContext('2d');
+  const s = canvas.width;
+  const pad = Math.round(s * 0.1);
+  
+  // Clear
+  ctx.clearRect(0, 0, s, s);
+  
+  // Gradient
+  const grad = ctx.createLinearGradient(0, 0, s, s);
+  grad.addColorStop(0, '#6366f1');
+  grad.addColorStop(1, '#8b5cf6');
+  
+  const calX = pad;
+  const calY = pad + Math.round(s * 0.08);
+  const calW = s - pad * 2;
+  const calH = Math.round(calW * 0.85);
+  const r = Math.max(1, Math.round(s * 0.1));
+  const headerH = Math.round(calH * 0.3);
+  const strokeW = Math.max(1, Math.round(s * 0.06));
+  
+  // Calendar body
+  ctx.strokeStyle = grad;
+  ctx.lineWidth = strokeW;
+  ctx.beginPath();
+  ctx.roundRect(calX, calY, calW, calH, r);
+  ctx.stroke();
+  
+  // Header line
+  ctx.lineWidth = Math.max(1, Math.round(s * 0.04));
+  ctx.beginPath();
+  ctx.moveTo(calX, calY + headerH);
+  ctx.lineTo(calX + calW, calY + headerH);
+  ctx.stroke();
+  
+  // Pins
+  ctx.fillStyle = grad;
+  ctx.lineWidth = 0;
+  const pinW = Math.max(1.5, Math.round(s * 0.06));
+  const pinH = Math.round(s * 0.15);
+  const pin1X = calX + Math.round(calW * 0.3);
+  const pin2X = calX + Math.round(calW * 0.7);
+  const pinY = calY - Math.round(pinH * 0.35);
+  
+  ctx.beginPath();
+  ctx.roundRect(pin1X - pinW/2, pinY, pinW, pinH, pinW/2);
+  ctx.fill();
+  ctx.beginPath();
+  ctx.roundRect(pin2X - pinW/2, pinY, pinW, pinH, pinW/2);
+  ctx.fill();
+  
+  // Grid dots
+  const dotR = Math.max(1, Math.round(s * 0.04));
+  const gridArea = { 
+    x: calX + Math.round(calW * 0.2), 
+    y: calY + headerH + Math.round((calH - headerH) * 0.3),
+    w: Math.round(calW * 0.6),
+    h: Math.round((calH - headerH) * 0.5)
+  };
+  
+  for (let row = 0; row < 2; row++) {
+    for (let col = 0; col < 3; col++) {
+      const cx = gridArea.x + col * (gridArea.w / 2);
+      const cy = gridArea.y + row * gridArea.h;
+      ctx.globalAlpha = (row === 0 && col === 1) ? 1 : 0.5;
+      ctx.beginPath();
+      ctx.arc(cx, cy, dotR, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+  ctx.globalAlpha = 1;
+  
+  // Export arrow (bottom-right corner)
+  if (s >= 32) {
+    const arrowSize = Math.round(s * 0.18);
+    const arrowX = calX + calW - arrowSize * 0.3;
+    const arrowY = calY + calH - arrowSize * 0.3;
+    ctx.strokeStyle = grad;
+    ctx.lineWidth = Math.max(1, Math.round(s * 0.04));
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(arrowX, arrowY - arrowSize * 0.5);
+    ctx.lineTo(arrowX, arrowY);
+    ctx.lineTo(arrowX - arrowSize * 0.5, arrowY);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(arrowX, arrowY);
+    ctx.lineTo(arrowX - arrowSize * 0.8, arrowY - arrowSize * 0.8);
+    ctx.stroke();
+  }
+}
+
+[16, 48, 128].forEach(size => {
+  const canvas = document.getElementById('c' + size);
+  drawIcon(canvas);
+  
+  // Download as PNG
+  const link = document.createElement('a');
+  link.download = 'icon' + size + '.png';
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+});
+</script>
+<p>Icons generated and downloading...</p>
+</body>
+</html>
